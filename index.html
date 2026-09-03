@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>e-District 3.0 Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#F6F7F9; --surface:#FFFFFF; --surface2:#EFF2F6;
+    --ink:#1B2537; --muted:#5A6478; --line:#DCE1EA; --line-soft:#E8ECF2;
+    --accent:#14508C; --accent-ink:#0F3E6E; --accent-soft:#E9F0F8; --accent-line:#B9CFE6;
+    --good:#1E7F4F; --good-soft:#E7F4EC; --good-line:#BCDECB;
+    --warn:#8A5D00; --warn-soft:#FBF3E0; --warn-line:#E8D3A0;
+    --risk:#A02830; --risk-soft:#FAECEC;
+    --code:#39455C;
+    --shadow:0 1px 2px rgba(27,37,55,.05), 0 6px 20px rgba(27,37,55,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0F141D; --surface:#161D2A; --surface2:#1C2536;
+      --ink:#E6EAF2; --muted:#96A1B6; --line:#2B3548; --line-soft:#232D3F;
+      --accent:#7FB0E4; --accent-ink:#A9CCF0; --accent-soft:#1A2B42; --accent-line:#2E4C70;
+      --good:#57C08B; --good-soft:#15301F; --good-line:#2A5A3C;
+      --warn:#E2B65C; --warn-soft:#2E2410; --warn-line:#57451D;
+      --risk:#E58089; --risk-soft:#331B1D;
+      --code:#B9C4D8;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F141D; --surface:#161D2A; --surface2:#1C2536;
+    --ink:#E6EAF2; --muted:#96A1B6; --line:#2B3548; --line-soft:#232D3F;
+    --accent:#7FB0E4; --accent-ink:#A9CCF0; --accent-soft:#1A2B42; --accent-line:#2E4C70;
+    --good:#57C08B; --good-soft:#15301F; --good-line:#2A5A3C;
+    --warn:#E2B65C; --warn-soft:#2E2410; --warn-line:#57451D;
+    --risk:#E58089; --risk-soft:#331B1D;
+    --code:#B9C4D8;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Public Sans', 'Segoe UI', system-ui, sans-serif;
+    font-size:16px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1160px; margin:0 auto; padding:0 24px 96px;}
+  .layout{display:grid; grid-template-columns:230px minmax(0,1fr); gap:56px; align-items:start;}
+  @media (max-width:1023px){ .layout{grid-template-columns:minmax(0,1fr);} .toc{display:none;} }
+
+  /* ---------- masthead ---------- */
+  header.mast{padding:64px 0 40px; border-bottom:3px solid var(--accent); margin-bottom:48px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:18px;
+  }
+  h1{
+    font-family:'Source Serif 4', Georgia, serif; font-weight:700;
+    font-size:clamp(34px, 4.6vw, 52px); line-height:1.12; margin:0 0 20px; text-wrap:balance;
+  }
+  .standfirst{font-size:19px; line-height:1.6; color:var(--muted); max-width:64ch; margin:0 0 28px;}
+  .standfirst strong{color:var(--ink); font-weight:600;}
+  .meta{display:flex; flex-wrap:wrap; gap:10px 28px; font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--muted);}
+  .meta b{color:var(--ink); font-weight:600;}
+
+  /* ---------- toc ---------- */
+  .toc{position:sticky; top:28px; font-size:13.5px;}
+  .toc .toc-title{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:14px;}
+  .toc ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;}
+  .toc a{
+    display:flex; gap:10px; padding:6px 10px; border-radius:6px; color:var(--muted);
+    text-decoration:none; line-height:1.4;
+  }
+  .toc a:hover{background:var(--surface2); color:var(--ink);}
+  .toc .n{font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--accent); min-width:18px; padding-top:1px;}
+
+  /* ---------- sections ---------- */
+  main{min-width:0;}
+  section{margin-bottom:72px; scroll-margin-top:24px;}
+  .sec-head{display:flex; align-items:baseline; gap:16px; border-bottom:1px solid var(--line); padding-bottom:14px; margin-bottom:26px;}
+  .sec-head .n{font-family:'IBM Plex Mono', monospace; font-size:15px; color:var(--accent); font-weight:600;}
+  h2{font-family:'Source Serif 4', Georgia, serif; font-weight:700; font-size:29px; line-height:1.2; margin:0; text-wrap:balance;}
+  h3{font-family:'Source Serif 4', Georgia, serif; font-weight:600; font-size:20.5px; margin:36px 0 12px; text-wrap:balance;}
+  h4{font-size:15px; font-weight:700; margin:24px 0 8px;}
+  p{margin:0 0 16px; max-width:72ch;}
+  ul,ol{margin:0 0 16px; padding-left:22px; max-width:70ch;}
+  li{margin-bottom:7px;}
+  li::marker{color:var(--accent);}
+  strong{font-weight:600;}
+  .lede{font-size:17.5px;}
+  a{color:var(--accent);}
+
+  /* ---------- components ---------- */
+  .callout{
+    background:var(--accent-soft); border:1px solid var(--accent-line); border-radius:10px;
+    padding:18px 22px; margin:24px 0; max-width:76ch;
+  }
+  .callout .tag{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; display:block; margin-bottom:8px;}
+  .callout p{margin-bottom:8px;} .callout p:last-child{margin-bottom:0;}
+  .callout.warn{background:var(--warn-soft); border-color:var(--warn-line);}
+  .callout.warn .tag{color:var(--warn);}
+
+  .factrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:26px 0;}
+  .fact{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px 18px; box-shadow:var(--shadow);}
+  .fact .v{font-family:'IBM Plex Mono', monospace; font-size:22px; font-weight:600; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .fact .k{font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.4;}
+
+  table{border-collapse:collapse; width:100%; font-size:14px; margin:8px 0 24px;}
+  .tablewrap{overflow-x:auto; margin:20px 0;}
+  th{
+    text-align:left; font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); font-weight:600;
+    border-bottom:2px solid var(--line); padding:8px 14px 8px 0;
+  }
+  td{border-bottom:1px solid var(--line-soft); padding:11px 14px 11px 0; vertical-align:top; line-height:1.5;}
+  td:first-child{font-weight:600; white-space:nowrap;}
+
+  .decision{background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); margin:26px 0; overflow:hidden;}
+  .decision .d-head{display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; padding:16px 22px; border-bottom:1px solid var(--line-soft); background:var(--surface2);}
+  .decision .d-domain{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:600;}
+  .decision .d-pick{font-family:'Source Serif 4', Georgia, serif; font-size:18px; font-weight:700;}
+  .chip{
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+    font-weight:600; color:var(--good); background:var(--good-soft); border:1px solid var(--good-line);
+    border-radius:99px; padding:3px 10px; margin-left:auto;
+  }
+  .decision .d-body{padding:18px 22px 8px; display:grid; grid-template-columns:1fr 1fr; gap:0 32px;}
+  @media (max-width:760px){ .decision .d-body{grid-template-columns:1fr;} }
+  .decision h5{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    margin:0 0 8px; font-weight:600; color:var(--good);
+  }
+  .decision .lose h5{color:var(--warn);}
+  .decision ul{font-size:14px; padding-left:18px; margin-bottom:16px;}
+  .decision .d-alt{grid-column:1 / -1; border-top:1px dashed var(--line); padding:14px 0 10px; font-size:14px;}
+  .decision .d-alt h5{color:var(--muted);}
+  .decision .d-alt p{margin-bottom:8px; max-width:none;}
+  .decision .d-alt b{font-weight:600;}
+
+  figure{margin:32px 0; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:26px 22px 16px; box-shadow:var(--shadow); overflow-x:auto;}
+  figure svg{display:block; max-width:100%; height:auto; margin:0 auto; color:var(--ink);}
+  figcaption{font-size:13px; color:var(--muted); margin-top:14px; line-height:1.5; max-width:80ch;}
+  figcaption b{color:var(--ink);}
+
+  .phase{display:grid; grid-template-columns:120px minmax(0,1fr); gap:20px; padding:20px 0; border-bottom:1px solid var(--line-soft);}
+  @media (max-width:600px){ .phase{grid-template-columns:1fr;} }
+  .phase .p-tag{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--accent); font-weight:600; line-height:1.5;}
+  .phase .p-tag small{display:block; color:var(--muted); font-weight:400;}
+  .phase h4{margin:0 0 6px;}
+  .phase p{font-size:14.5px; margin-bottom:6px;}
+  .phase ul{font-size:14px; margin-bottom:0;}
+
+  .close{
+    border-top:3px solid var(--accent); padding-top:32px; margin-top:8px;
+  }
+  .close p{max-width:76ch;}
+  code{font-family:'IBM Plex Mono', monospace; font-size:.88em; color:var(--code); background:var(--surface2); padding:1px 5px; border-radius:4px;}
+</style>
+
+
+</head>
+<body>
+<div class="wrap">
+<header class="mast">
+  <div class="eyebrow">Concept architecture &middot; West Bengal e-District</div>
+  <h1>e-District 3.0: From Applications to Entitlements</h1>
+  <p class="standfirst">
+    A blueprint for the next generation of citizen service delivery in West Bengal — a single, configurable
+    platform where <strong>every department shares one workflow backbone</strong>, new services are onboarded as
+    <strong>configuration rather than code</strong>, and the state moves from waiting for applications to
+    <strong>proactively inviting every eligible citizen to their entitlements</strong>.
+  </p>
+  <div class="meta">
+    <span>Status: <b>Concept draft &mdash; for discussion</b></span>
+    <span>Date: <b>September 2026</b></span>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Contents">
+  <div class="toc-title">Contents</div>
+  <ol>
+    <li><a href="#s0"><span class="n">—</span>Executive summary</a></li>
+    <li><a href="#s1"><span class="n">1</span>Where we stand</a></li>
+    <li><a href="#s2"><span class="n">2</span>The shift: reactive to proactive</a></li>
+    <li><a href="#s3"><span class="n">3</span>Platform architecture</a></li>
+    <li><a href="#s4"><span class="n">4</span>The entitlement engine</a></li>
+    <li><a href="#s5"><span class="n">5</span>Adding a new service</a></li>
+    <li><a href="#s6"><span class="n">6</span>Built for the people who use it</a></li>
+    <li><a href="#s7"><span class="n">7</span>Insight at every level</a></li>
+    <li><a href="#s8"><span class="n">8</span>Technology choices &amp; trade-offs</a></li>
+    <li><a href="#s9"><span class="n">9</span>Security, reliability, debuggability</a></li>
+    <li><a href="#s10"><span class="n">10</span>Ownership and continuity</a></li>
+    <li><a href="#s11"><span class="n">11</span>Phased roadmap</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ============ EXEC SUMMARY ============ -->
+<section id="s0">
+  <div class="sec-head"><h2>Executive summary</h2></div>
+  <p class="lede">
+    West Bengal's e-District 2.0 delivers 158 services and has processed nearly one crore applications.
+    It has also taught us four expensive lessons: a proprietary platform makes every change a costly vendor
+    negotiation; a system without disaster recovery is a standing risk; citizens still carry the burden of
+    discovering schemes and proving facts the government already knows; and operations cost
+    ₹3&nbsp;crore a year regardless of how well the system serves anyone.
+  </p>
+  <p>
+    This document proposes building <strong>e-District 3.0</strong> around two ideas, both proven in other
+    Indian states but never combined at full depth:
+  </p>
+  <ul>
+    <li>
+      <strong>One platform, configured — not many applications, coded.</strong> Every departmental service runs
+      on a single workflow backbone. A new service is a form definition, an approval flow and a set of
+      eligibility rules — all authored as open-standard configuration by trained departmental staff, not as a
+      change request to a vendor.
+    </li>
+    <li>
+      <strong>The state initiates, not just the citizen.</strong> An integrated People Hub and a rules-driven
+      entitlement engine continuously match citizens and businesses against scheme criteria. When a family
+      becomes eligible for Kanyashree, or an entrepreneur qualifies for a Bhabishyat Credit Card, the system
+      reaches them first — with a pre-filled application and a consent request, not a poster.
+    </li>
+  </ul>
+  <p>
+    Two further commitments run through the design. Approvals are <strong>decision-ready</strong>: a case does
+    not reach an officer until every document, registry check and rule evaluation is already attached, so the
+    officer's time goes into judgement rather than correspondence. And <strong>insight reaches every level of
+    the hierarchy</strong> — from an approving officer's queue to the Minister's statewide coverage picture —
+    as live views over the same data, retiring the manually compiled reporting chain. The interfaces are
+    specified for their users — local-language first, plain language, usable on inexpensive phones — and adding a
+    new service is a departmental operation measured in days, not a procurement (Section 5).
+  </p>
+  <p>
+    The document sets out the architecture, proposes a specific technology stack, and states for every
+    choice <strong>what we give up by making it</strong>. It addresses the blockchain and metaverse ideas from
+    earlier discussions on their merits and is explicit about the conclusion: <strong>blockchain is not
+    proposed</strong>. The proposals optimise for the three qualities a government-to-citizen system cannot
+    compromise on: <strong>security, reliability, and the ability to debug and explain every decision the
+    system makes</strong> — years from now, under a different vendor, to a court or a committee if required.
+  </p>
+</section>
+
+<!-- ============ 1. WHERE WE STAND ============ -->
+<section id="s1">
+  <div class="sec-head"><span class="n">1</span><h2>Where we stand</h2></div>
+
+  <div class="factrow">
+    <div class="fact"><div class="v">158</div><div class="k">services live on e-District 2.0</div></div>
+    <div class="fact"><div class="v">~1 crore</div><div class="k">applications processed</div></div>
+    <div class="fact"><div class="v">₹3 Cr / yr</div><div class="k">O&amp;M cost, independent of service count</div></div>
+    <div class="fact"><div class="v">16</div><div class="k">services pending UAT sign-off (Fire, Irrigation, NKDA, Cooperation, Grievance)</div></div>
+    <div class="fact"><div class="v">0</div><div class="k">disaster-recovery sites commissioned</div></div>
+  </div>
+
+  <p>
+    The current platform works, but its structural problems compound each other. <strong>Vendor lock-in</strong>
+    with the proprietary platform means every improvement — even fixing the login errors and document
+    upload failures citizens complain about — is a paid change request on the vendor's timeline.
+    <strong>No disaster recovery</strong> means a single data-centre incident takes citizen services offline
+    statewide. And because every service was built as bespoke work, the <strong>cost of the platform does not
+    fall</strong> when services consolidate — the ₹3&nbsp;crore O&amp;M bill is for the arrangement, not the outcome.
+  </p>
+
+  <h3>What other states have already proven</h3>
+  <p>
+    We are not designing in the dark. Four states have each validated one piece of what this proposal
+    combines:
+  </p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>State</th><th>What they built</th><th>What we adopt from it</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Haryana</td>
+        <td>Unified workflow-based backend; a cross-department e-District Database used for verification instead of repeated document submission.</td>
+        <td>One workflow engine for all departments; decisions made from registries, not photocopies.</td>
+      </tr>
+      <tr>
+        <td>Odisha</td>
+        <td>A runtime "Service Delivery Engine" — new services configured dynamically, departments onboard without redevelopment; open standards, IndEA alignment.</td>
+        <td>Services as configuration; the department, not the vendor, owns onboarding.</td>
+      </tr>
+      <tr>
+        <td>Telangana</td>
+        <td>MeeSeva WhatsApp governance on a single number; Samagra Vedika — a unified citizen &amp; family database with identity resolution and eligibility analytics.</td>
+        <td>The social registry as the foundation for eligibility; conversational channels as first-class delivery.</td>
+      </tr>
+      <tr>
+        <td>Tamil Nadu</td>
+        <td>e-Sevai 2.0 on a low-code platform: configurable workflows, rapid service onboarding, reusable components, State Resident Data Hub.</td>
+        <td>Low-code authoring of flows and forms; a resident data hub feeding every service.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    All four use their registries to verify applications after submission. None uses them to originate
+    applications. That extension is what Section 2 sets out.
+  </p>
+</section>
+
+<!-- ============ 2. THE SHIFT ============ -->
+<section id="s2">
+  <div class="sec-head"><span class="n">2</span><h2>The shift: reactive to proactive</h2></div>
+
+  <p class="lede">
+    e-District 3.0 treats recorded life events and status changes — a birth registration, a class VIII
+    enrolment, a licence renewal, a scheme launch — as <strong>triggers</strong>. Each trigger is evaluated
+    against the criteria of every active scheme. On a match, the citizen receives an invitation carrying a
+    <strong>pre-filled application</strong>: one consent, a few confirmations. Verification runs against
+    registries in the background; officials review exceptions.
+  </p>
+
+  <figure>
+    <svg viewBox="0 0 900 320" role="img" aria-label="Comparison of the current citizen-initiated flow, where awareness and paperwork cause drop-offs, against the proposed state-initiated flow, where a recorded life event triggers an invitation and a pre-filled application.">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+        <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#3E7CB9"/>
+        </marker>
+      </defs>
+      <!-- TODAY row -->
+      <text x="20" y="30" font-size="12" font-weight="700" font-family="IBM Plex Mono, monospace" fill="currentColor" opacity="0.55">TODAY — CITIZEN-INITIATED</text>
+      <g fill="none" stroke="currentColor" stroke-width="1.3">
+        <rect x="20"  y="50" width="130" height="46" rx="8"/>
+        <rect x="215" y="50" width="130" height="46" rx="8" stroke-dasharray="5 4"/>
+        <rect x="410" y="50" width="130" height="46" rx="8"/>
+        <rect x="605" y="50" width="130" height="46" rx="8"/>
+        <rect x="770" y="50" width="110" height="46" rx="8"/>
+      </g>
+      <g font-size="12.5" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">
+        <text x="85" y="70">Citizen must</text><text x="85" y="86">learn scheme exists</text>
+        <text x="280" y="70">Gathers documents,</text><text x="280" y="86">visits office / CSC</text>
+        <text x="475" y="70">Applies &amp; proves</text><text x="475" y="86">eligibility</text>
+        <text x="670" y="70">Manual scrutiny</text><text x="670" y="86">&amp; verification</text>
+        <text x="825" y="70">Benefit</text><text x="825" y="86">(if approved)</text>
+      </g>
+      <g stroke="currentColor" stroke-width="1.3" marker-end="url(#arr)">
+        <line x1="150" y1="73" x2="209" y2="73"/>
+        <line x1="345" y1="73" x2="404" y2="73"/>
+        <line x1="540" y1="73" x2="599" y2="73"/>
+        <line x1="735" y1="73" x2="764" y2="73"/>
+      </g>
+      <g font-size="10.5" fill="currentColor" opacity="0.6" text-anchor="middle" font-family="IBM Plex Mono, monospace">
+        <text x="180" y="118">drop-off</text>
+        <text x="375" y="118">drop-off</text>
+        <text x="570" y="118">weeks</text>
+      </g>
+
+      <!-- divider -->
+      <line x1="20" y1="150" x2="880" y2="150" stroke="currentColor" stroke-width="0.6" opacity="0.25" stroke-dasharray="3 5"/>
+
+      <!-- PROPOSED row -->
+      <text x="20" y="185" font-size="12" font-weight="700" font-family="IBM Plex Mono, monospace" fill="#3E7CB9">PROPOSED — STATE-INITIATED</text>
+      <g fill="none" stroke="#3E7CB9" stroke-width="1.6">
+        <rect x="20"  y="205" width="130" height="52" rx="8"/>
+        <rect x="215" y="205" width="130" height="52" rx="8"/>
+        <rect x="410" y="205" width="130" height="52" rx="8"/>
+        <rect x="605" y="205" width="130" height="52" rx="8"/>
+        <rect x="770" y="205" width="110" height="52" rx="8"/>
+      </g>
+      <g font-size="12.5" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">
+        <text x="85" y="226">Life event recorded</text><text x="85" y="242">(birth, enrolment,</text><text x="85" y="256" opacity="0.7">filing, licence…)</text>
+        <text x="280" y="229">Entitlement engine</text><text x="280" y="245">matches criteria</text>
+        <text x="475" y="229">Invitation sent —</text><text x="475" y="245">consent + pre-filled</text>
+        <text x="670" y="229">Auto-verified from</text><text x="670" y="245">registries; officials</text><text x="670" y="257" opacity="0.7">review exceptions</text>
+        <text x="825" y="229">Benefit via</text><text x="825" y="245">DBT</text>
+      </g>
+      <g stroke="#3E7CB9" stroke-width="1.6" marker-end="url(#arrA)">
+        <line x1="150" y1="231" x2="209" y2="231"/>
+        <line x1="345" y1="231" x2="404" y2="231"/>
+        <line x1="540" y1="231" x2="599" y2="231"/>
+        <line x1="735" y1="231" x2="764" y2="231"/>
+      </g>
+      <g font-size="10.5" fill="#3E7CB9" text-anchor="middle" font-family="IBM Plex Mono, monospace">
+        <text x="180" y="285">automatic</text>
+        <text x="375" y="285">citizen's preferred channel</text>
+        <text x="570" y="285">days, not weeks</text>
+      </g>
+    </svg>
+    <figcaption>
+      <b>The difference is who initiates.</b> In the current flow, the two dashed early stages are where eligible
+      citizens silently drop out. In the proposed flow, those stages are performed by the platform itself; the
+      citizen's first touchpoint is an invitation they only need to confirm.
+    </figcaption>
+  </figure>
+
+  <h3>What this looks like in practice</h3>
+  <ul>
+    <li>
+      <strong>A girl child's family:</strong> her class VIII enrolment is recorded in the education database.
+      The engine matches her family profile against Kanyashree's criteria and sends her guardian an
+      invitation in their own language on the family's preferred channel. They consent; the annual scholarship flows without a single office visit.
+    </li>
+    <li>
+      <strong>A small business owner:</strong> three years of timely trade-licence renewals and clean filings
+      make him eligible for a state credit-support scheme. The system informs him and opens the application;
+      his compliance history is already part of the case file.
+    </li>
+    <li>
+      <strong>A bereaved household:</strong> a death registration triggers the death certificate, pension
+      transfer checks, and survivor-benefit eligibility in a single flow.
+    </li>
+  </ul>
+
+  <div class="callout">
+    <span class="tag">Legal basis</span>
+    <p>
+      Proactive processing of citizen data for benefits is on firm ground under the
+      <strong>Digital Personal Data Protection Act, 2023</strong>: Section 7(b) permits the State to process
+      personal data for providing subsidies, benefits, services, certificates and licences. The platform still
+      builds consent in — the invitation itself is the consent moment, and every use of a citizen's data is
+      recorded in an auditable consent ledger (Section 6). This is stronger than compliance: it makes the
+      proactive model defensible in public and in court.
+    </p>
+  </div>
+</section>
+
+<!-- ============ 3. ARCHITECTURE ============ -->
+<section id="s3">
+  <div class="sec-head"><span class="n">3</span><h2>Platform architecture</h2></div>
+
+  <p class="lede">
+    The architecture has one organising principle: <strong>everything a department needs to launch or change a
+    service is data, not code.</strong> The platform is built once, hardened once, and audited once; services
+    are then expressed in three open, business-readable standards.
+  </p>
+
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Standard</th><th>What it defines</th><th>Who authors it</th></tr></thead>
+    <tbody>
+      <tr><td>JSON Schema</td><td>The service's form: fields, types, validations, required documents, fees. The citizen portal renders any form directly from its schema.</td><td>Departmental analyst, via a form designer UI</td></tr>
+      <tr><td>BPMN 2.0</td><td>The approval workflow: stages, roles (Dealing Assistant → Verifying Officer → Approving Authority), SLAs, escalations, delegation. Drawn as a diagram officials can read.</td><td>Departmental analyst + district administration</td></tr>
+      <tr><td>DMN 1.3</td><td>Eligibility and decision rules as decision tables — the scheme's criteria in rows and columns, versioned, testable, and readable by the officers who own the scheme.</td><td>Scheme owner, reviewed by department</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    This trio is the direct answer to the two core requirements: a <strong>unified departmental flow</strong>
+    (every service, from every department, runs on the same engine and appears in the same official's console)
+    and the <strong>ability to add services indefinitely</strong> (a new service is three artefacts and a
+    review, not a procurement). Section 5 walks through that operation end to end.
+  </p>
+
+  <figure>
+    <svg viewBox="0 0 920 620" role="img" aria-label="Layered platform architecture: citizen channels on top, an API gateway, a core platform containing the service registry, workflow engine, entitlement engine, People Hub, Certificate Hub and consent ledger, an event backbone, and external integrations at the bottom. An observability rail spans all layers.">
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <!-- Channels -->
+      <text x="20" y="26" font-size="11.5" font-weight="700" font-family="IBM Plex Mono, monospace" fill="currentColor" opacity="0.55">CHANNELS</text>
+      <g fill="none" stroke="currentColor" stroke-width="1.3">
+        <rect x="20"  y="38" width="180" height="50" rx="8"/>
+        <rect x="216" y="38" width="180" height="50" rx="8"/>
+        <rect x="412" y="38" width="180" height="50" rx="8"/>
+        <rect x="608" y="38" width="180" height="50" rx="8"/>
+      </g>
+      <g font-size="12.5" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">
+        <text x="110" y="59">Citizen portal</text><text x="110" y="75" opacity="0.7">web + PWA, multilingual</text>
+        <text x="306" y="59">Notification bus</text><text x="306" y="75" opacity="0.7">WhatsApp · Telegram · SMS · email</text>
+        <text x="502" y="59">CSC / kiosk</text><text x="502" y="75" opacity="0.7">assisted mode, BSK network</text>
+        <text x="698" y="59">Department console</text><text x="698" y="75" opacity="0.7">unified cross-service inbox</text>
+      </g>
+      <g stroke="currentColor" stroke-width="1.2" marker-end="url(#arr2)">
+        <line x1="110" y1="88" x2="110" y2="118"/>
+        <line x1="306" y1="88" x2="306" y2="118"/>
+        <line x1="502" y1="88" x2="502" y2="118"/>
+        <line x1="698" y1="88" x2="698" y2="118"/>
+      </g>
+      <!-- Gateway -->
+      <rect x="20" y="122" width="768" height="44" rx="8" fill="none" stroke="currentColor" stroke-width="1.3"/>
+      <text x="404" y="149" font-size="13" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">API gateway — authentication, rate limiting, request audit, correlation IDs</text>
+      <line x1="404" y1="166" x2="404" y2="192" stroke="currentColor" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+      <!-- Core platform -->
+      <rect x="20" y="196" width="768" height="250" rx="12" fill="none" stroke="#3E7CB9" stroke-width="2"/>
+      <text x="36" y="222" font-size="11.5" font-weight="700" font-family="IBM Plex Mono, monospace" fill="#3E7CB9">CORE PLATFORM — one deployable, enforced module boundaries</text>
+      <g fill="none" stroke="currentColor" stroke-width="1.2">
+        <rect x="40"  y="238" width="228" height="58" rx="8"/>
+        <rect x="284" y="238" width="228" height="58" rx="8"/>
+        <rect x="528" y="238" width="236" height="58" rx="8"/>
+        <rect x="40"  y="310" width="228" height="58" rx="8"/>
+        <rect x="284" y="310" width="228" height="58" rx="8"/>
+        <rect x="528" y="310" width="236" height="58" rx="8"/>
+      </g>
+      <g font-size="12.5" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">
+        <text x="154" y="262">Service registry</text><text x="154" y="278" opacity="0.7">forms, fees, docs (JSON Schema)</text>
+        <text x="398" y="262">Workflow engine</text><text x="398" y="278" opacity="0.7">BPMN — all departments</text>
+        <text x="646" y="262">Entitlement engine</text><text x="646" y="278" opacity="0.7">DMN rules, continuous matching</text>
+        <text x="154" y="334">People Hub</text><text x="154" y="350" opacity="0.7">golden records, family graph</text>
+        <text x="398" y="334">Certificate Hub</text><text x="398" y="350" opacity="0.7">signed, QR-verifiable credentials</text>
+        <text x="646" y="334">Consent &amp; audit ledger</text><text x="646" y="350" opacity="0.7">append-only, per-citizen</text>
+      </g>
+      <!-- Event backbone -->
+      <rect x="40" y="388" width="724" height="40" rx="8" fill="none" stroke="#3E7CB9" stroke-width="1.6" stroke-dasharray="6 4"/>
+      <text x="402" y="413" font-size="12.5" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">Event backbone — every state change published as an immutable event (audit, triggers, analytics)</text>
+
+      <line x1="404" y1="446" x2="404" y2="474" stroke="currentColor" stroke-width="1.2" marker-end="url(#arr2)"/>
+
+      <!-- Integrations -->
+      <text x="20" y="492" font-size="11.5" font-weight="700" font-family="IBM Plex Mono, monospace" fill="currentColor" opacity="0.55">INTEGRATIONS</text>
+      <g fill="none" stroke="currentColor" stroke-width="1.2">
+        <rect x="20"  y="502" width="140" height="46" rx="8"/>
+        <rect x="176" y="502" width="140" height="46" rx="8"/>
+        <rect x="332" y="502" width="140" height="46" rx="8"/>
+        <rect x="488" y="502" width="140" height="46" rx="8"/>
+        <rect x="644" y="502" width="144" height="46" rx="8"/>
+      </g>
+      <g font-size="12" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">
+        <text x="90" y="522">Aadhaar</text><text x="90" y="537" opacity="0.7">e-KYC / OTP</text>
+        <text x="246" y="522">DigiLocker</text><text x="246" y="537" opacity="0.7">pull &amp; push</text>
+        <text x="402" y="522">Payments / DBT</text><text x="402" y="537" opacity="0.7">IFMS · PFMS</text>
+        <text x="558" y="522">eSign / HSM</text><text x="558" y="537" opacity="0.7">digital signing</text>
+        <text x="716" y="522">Dept. systems</text><text x="716" y="537" opacity="0.7">land, health, education</text>
+      </g>
+
+      <!-- Observability rail -->
+      <rect x="812" y="38" width="88" height="510" rx="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <g font-size="11" fill="currentColor" text-anchor="middle" font-family="IBM Plex Mono, monospace">
+        <text x="856" y="66" font-weight="700" opacity="0.8">OBSERV-</text>
+        <text x="856" y="80" font-weight="700" opacity="0.8">ABILITY</text>
+        <text x="856" y="116" opacity="0.65">traces</text>
+        <text x="856" y="140" opacity="0.65">logs</text>
+        <text x="856" y="164" opacity="0.65">metrics</text>
+        <text x="856" y="200" opacity="0.65">every</text>
+        <text x="856" y="214" opacity="0.65">request,</text>
+        <text x="856" y="228" opacity="0.65">every</text>
+        <text x="856" y="242" opacity="0.65">layer</text>
+      </g>
+      <text x="404" y="600" font-size="11" fill="currentColor" opacity="0.55" text-anchor="middle" font-family="IBM Plex Mono, monospace">One correlation ID follows a citizen's request from first notification to DBT payment</text>
+    </svg>
+    <figcaption>
+      <b>The platform in one view.</b> Channels are thin; all logic lives in the core platform behind one
+      gateway. The event backbone (dashed) is what makes the system both auditable and proactive — the same
+      event that records "birth registered" for audit purposes also wakes the entitlement engine. The
+      observability rail spans every layer: nothing happens in this system without a trace.
+    </figcaption>
+  </figure>
+
+  <h3>The six core modules</h3>
+  <ul>
+    <li><strong>Service registry</strong> — the catalogue of every service: its form schema, fee structure, document requirements, SLA commitments, and which BPMN flow and DMN rules it binds to. Versioned; a service definition change never rewrites history.</li>
+    <li><strong>Workflow engine</strong> — one engine executes every department's BPMN flows. Officials see a single inbox of tasks across all services they are responsible for, with SLA timers and automatic escalation. District magistrates see live dashboards of every pipeline in their district.</li>
+    <li><strong>Entitlement engine</strong> — evaluates DMN rule sets against People Hub profiles, both on events (a new registration) and on schedule (a scheme launch triggers a full sweep). Detailed in Section 4.</li>
+    <li><strong>People Hub</strong> — the integrated social registry: golden records resolved from Aadhaar-seeded departmental databases, with an explicit family graph. Follows the Telangana Samagra Vedika model, with DPDP-compliant purpose binding on every attribute.</li>
+    <li><strong>Certificate Hub</strong> — every certificate issued by any department, digitally signed, QR-verifiable by anyone, pushed to DigiLocker. Historic certificates are digitised into it; where DigiLocker already holds a document, it is pulled, not re-created.</li>
+    <li><strong>Consent &amp; audit ledger</strong> — an append-only record of every access to citizen data, every consent given or withdrawn, and every decision taken — human or automated — with the rule version that produced it.</li>
+    <li><strong>Notification bus</strong> (run as a satellite service) — a pluggable delivery layer behind which WhatsApp, Telegram, SMS, email, IVRS and the portal inbox are interchangeable adapters, with per-citizen channel preferences and fallback chains. Detailed in Section 8.</li>
+  </ul>
+
+  <h3>Decision-ready approvals</h3>
+  <p>
+    Government wants decisions to move faster. The design responds by changing what a decision costs, not by
+    pressuring the officer. In the present system, an approving officer receives an application and then
+    begins collecting what is needed to decide it — clarifications, missing documents, verification reports.
+    Every round trip adds days, and those round trips are where pendency lives.
+  </p>
+  <p>
+    In e-District 3.0, a case does not appear in an officer's queue until it is complete. The workflow engine
+    assembles the case file first: documents validated and scanned, every claim checked against the relevant
+    registry, eligibility rules evaluated with their explanation attached, field verification (where the
+    service requires one) completed and included, and the applicant's relevant history summarised. The
+    officer's screen presents a single decision summary — what is claimed, what is verified and against which
+    source, and what, if anything, is discrepant.
+  </p>
+  <ul>
+    <li>The officer's actions are three: approve with eSign, reject with a recorded reason, or refer for a field check. A query back to the citizen remains possible, but it is a structured, one-time request with its own SLA clock — and the rate at which officers need it is itself a published metric, because a high rate means the case-file definition for that service is incomplete, not that citizens are careless.</li>
+    <li>Where every check is positive and the rules permit, a service can be configured for straight-through approval, with officers sampling cases rather than touching each one — the model several states already apply to low-risk certificates.</li>
+    <li>The measure of success shifts from average pendency to minutes of officer attention per decision — and because the case file is complete, an approval carries a full evidentiary record, which protects the officer as much as the citizen.</li>
+  </ul>
+</section>
+
+<!-- ============ 4. ENTITLEMENT ENGINE ============ -->
+<section id="s4">
+  <div class="sec-head"><span class="n">4</span><h2>The entitlement engine</h2></div>
+
+  <p class="lede">
+    This is the part of the system that is genuinely new, and the reason e-District 3.0 is not "an application
+    portal with a workflow". It deserves precise treatment, because it is also the part that carries the most
+    responsibility: a system that decides who is invited to a benefit must be able to explain itself.
+  </p>
+
+  <figure>
+    <svg viewBox="0 0 900 360" role="img" aria-label="Lifecycle of a proactive entitlement: an event enters the backbone, updates the People Hub, the entitlement engine evaluates DMN rules and records an explanation, an invitation with consent goes out, the pre-filled application enters the BPMN workflow where officials handle exceptions, and the benefit is paid via DBT with the outcome written back as a new event.">
+      <defs>
+        <marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+        </marker>
+        <marker id="arr3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#3E7CB9"/>
+        </marker>
+      </defs>
+      <!-- Row 1 -->
+      <g fill="none" stroke="currentColor" stroke-width="1.3">
+        <rect x="20"  y="30" width="190" height="64" rx="8"/>
+        <rect x="270" y="30" width="190" height="64" rx="8"/>
+      </g>
+      <rect x="520" y="30" width="360" height="64" rx="8" fill="none" stroke="#3E7CB9" stroke-width="1.8"/>
+      <g font-size="12.5" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">
+        <text x="115" y="55">Event recorded</text><text x="115" y="71" opacity="0.7">birth · enrolment · licence</text><text x="115" y="85" opacity="0.7">renewal · scheme launch</text>
+        <text x="365" y="55">People Hub updated</text><text x="365" y="71" opacity="0.7">identity resolution,</text><text x="365" y="85" opacity="0.7">family graph refresh</text>
+        <text x="700" y="52">Entitlement engine evaluates</text>
+        <text x="700" y="68" opacity="0.7">DMN decision tables for every active scheme;</text>
+        <text x="700" y="83" opacity="0.7">writes an explanation trace for each verdict</text>
+      </g>
+      <g stroke="currentColor" stroke-width="1.3" marker-end="url(#arr3)">
+        <line x1="210" y1="62" x2="264" y2="62"/>
+        <line x1="460" y1="62" x2="514" y2="62"/>
+      </g>
+      <text x="237" y="52" font-size="10.5" fill="currentColor" opacity="0.6" text-anchor="middle" font-family="IBM Plex Mono, monospace">event</text>
+      <text x="487" y="52" font-size="10.5" fill="currentColor" opacity="0.6" text-anchor="middle" font-family="IBM Plex Mono, monospace">match</text>
+
+      <!-- connector down -->
+      <path d="M 700 94 L 700 132 L 200 132 L 200 168" fill="none" stroke="#3E7CB9" stroke-width="1.6" marker-end="url(#arr3a)"/>
+      <text x="452" y="124" font-size="10.5" fill="#3E7CB9" text-anchor="middle" font-family="IBM Plex Mono, monospace">eligible → invite</text>
+
+      <!-- Row 2 -->
+      <g fill="none" stroke="currentColor" stroke-width="1.3">
+        <rect x="20"  y="172" width="360" height="64" rx="8" stroke="#3E7CB9" stroke-width="1.8"/>
+        <rect x="440" y="172" width="220" height="64" rx="8"/>
+        <rect x="720" y="172" width="160" height="64" rx="8"/>
+      </g>
+      <g font-size="12.5" fill="currentColor" text-anchor="middle" font-family="Public Sans, sans-serif">
+        <text x="200" y="194">Invitation + consent request</text>
+        <text x="200" y="210" opacity="0.7">via notification bus, in their language; application arrives</text>
+        <text x="200" y="225" opacity="0.7">pre-filled from People Hub — citizen confirms</text>
+        <text x="550" y="197">BPMN workflow runs</text><text x="550" y="213" opacity="0.7">auto-verified from registries;</text><text x="550" y="228" opacity="0.7">officials review exceptions only</text>
+        <text x="800" y="197">Benefit delivered</text><text x="800" y="213" opacity="0.7">DBT via IFMS/PFMS;</text><text x="800" y="228" opacity="0.7">certificate to Hub</text>
+      </g>
+      <g stroke="currentColor" stroke-width="1.3" marker-end="url(#arr3)">
+        <line x1="380" y1="204" x2="434" y2="204"/>
+        <line x1="660" y1="204" x2="714" y2="204"/>
+      </g>
+      <text x="407" y="194" font-size="10.5" fill="currentColor" opacity="0.6" text-anchor="middle" font-family="IBM Plex Mono, monospace">consent</text>
+      <text x="687" y="194" font-size="10.5" fill="currentColor" opacity="0.6" text-anchor="middle" font-family="IBM Plex Mono, monospace">approved</text>
+
+      <!-- feedback loop -->
+      <path d="M 800 236 L 800 290 L 115 290 L 115 100" fill="none" stroke="currentColor" stroke-width="1.1" stroke-dasharray="5 4" marker-end="url(#arr3)"/>
+      <text x="452" y="282" font-size="10.5" fill="currentColor" opacity="0.6" text-anchor="middle" font-family="IBM Plex Mono, monospace">outcome written back as a new event — feeds audit, analytics, and future eligibility</text>
+      <text x="452" y="336" font-size="11" fill="currentColor" opacity="0.55" text-anchor="middle" font-family="IBM Plex Mono, monospace">If not eligible: verdict + explanation stored — powers "Know Your Entitlement" queries</text>
+    </svg>
+    <figcaption>
+      <b>One entitlement, end to end.</b> The blue stages are the new capability; everything else reuses the
+      same workflow machinery that citizen-initiated applications run on. The dashed return path is the event
+      backbone closing the loop: outcomes become data for audit and for future matching.
+    </figcaption>
+  </figure>
+
+  <h3>Design commitments that keep it trustworthy</h3>
+  <ul>
+    <li>
+      <strong>Every decision is explainable.</strong> Each evaluation stores the rule version, the input
+      attributes used, and the fired rules. A citizen asking "why was I not invited?" — or an RTI request, or a
+      court — gets a precise answer. This is also the engine behind the <em>Know Your Entitlement</em> service:
+      the same rules, queried interactively.
+    </li>
+    <li>
+      <strong>Rules are versioned and testable.</strong> A scheme's criteria change by publishing a new DMN
+      version with an effective date. Before publishing, the department can dry-run it against the People Hub
+      and see exactly how many citizens gain or lose eligibility — policy impact analysis before the policy
+      takes effect.
+    </li>
+    <li>
+      <strong>The engine invites; it never silently enrols.</strong> Consent is the gate between eligibility
+      and application. This keeps the human in control and keeps the state on the right side of the DPDP Act.
+    </li>
+    <li>
+      <strong>Data quality is a first-class workflow.</strong> Identity resolution conflicts (two records that
+      may be the same person) are queued to human review, not auto-merged. A wrong merge in a benefits system
+      is a serious harm; the design treats it that way.
+    </li>
+  </ul>
+</section>
+
+<!-- ============ 5. ADDING A SERVICE ============ -->
+<section id="s5">
+  <div class="sec-head"><span class="n">5</span><h2>Adding a new service</h2></div>
+
+  <p class="lede">
+    The platform exists so that this operation is routine. A new service — a certificate, a licence, a
+    welfare scheme — is three artefacts on the shared engine: a form (JSON Schema), an approval flow (BPMN)
+    and a rule set (DMN). The sequence below is the whole of it; no step involves writing code, and no step
+    involves the platform vendor.
+  </p>
+
+  <div class="phase">
+    <div class="p-tag">Step 1</div>
+    <div>
+      <h4>Define the form</h4>
+      <p>A departmental analyst composes the form in the visual designer: fields, validations, required documents, fees. Most of a new form assembles from shared blocks that already exist — applicant identity, address, bank details, document upload — so the work is selection and sequencing, not invention.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="p-tag">Step 2</div>
+    <div>
+      <h4>Draw the approval flow</h4>
+      <p>The approval chain is drawn in BPMN: stages, roles, per-stage SLA, escalation. A small set of standard templates — direct approval; single approval with field verification; two-stage approval — covers most services, so a new flow starts from the nearest template rather than a blank page.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="p-tag">Step 3</div>
+    <div>
+      <h4>Write the eligibility rules</h4>
+      <p>The scheme owner sets the criteria as DMN decision tables: readable rows and columns, versioned, with an effective date. Fee concessions, priority categories and document waivers are rules in the same tables, not special cases in software.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="p-tag">Step 4</div>
+    <div>
+      <h4>Dry-run and test</h4>
+      <p>The rules are evaluated against the People Hub before publication, reporting exactly how many citizens would qualify and be invited — policy impact is known before the policy is live. Test applications then run end to end in a sandbox, including the officer's decision screen and the notification templates.</p>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="p-tag">Step 5</div>
+    <div>
+      <h4>Sanction and publish</h4>
+      <p>The department signs off the three artefacts — the BPMN diagram <em>is</em> the sanctioned process. Publication makes the service live simultaneously on the portal, at CSC/BSK counters, in the department console and on the notification bus. Forms render, dashboards include the new service, SLA clocks run — with no code changed anywhere.</p>
+    </div>
+  </div>
+
+  <h3>Effort, guardrails, and what it does to cost</h3>
+  <ul>
+    <li><strong>Effort:</strong> for a routine certificate service, the analyst work is measured in days; for a full scheme with proactive matching, in weeks — and the weeks are consumed by policy decisions, not software. Under e-District 2.0, the same addition is a vendor change request with a negotiated cost and timeline.</li>
+    <li><strong>Guardrails:</strong> every definition passes a platform-team review for data-protection and load implications before publication; shared blocks and naming standards keep 158 services consistent; and because definitions are versioned, a mistake is corrected by republishing the previous version — service definitions cannot affect one another.</li>
+    <li><strong>Cost structure:</strong> when services are configuration, the marginal cost of the 159th service is the analyst's time. This — not a cheaper contract — is the structural answer to an O&amp;M bill that today stays at ₹3&nbsp;crore regardless of what the platform does.</li>
+  </ul>
+</section>
+
+<!-- ============ 6. USABILITY ============ -->
+<section id="s6">
+  <div class="sec-head"><span class="n">6</span><h2>Built for the people who use it</h2></div>
+
+  <p class="lede">
+    A platform succeeds or fails at the screen. The complaint log of e-District 2.0 — login failures, upload
+    errors, slow approvals — is a usability record as much as a technical one, so usability is specified here
+    with the same precision as availability, and measured the same way.
+  </p>
+
+  <h3>The citizen's experience</h3>
+  <ul>
+    <li><strong>The citizen’s language first.</strong> Every screen, notification, receipt and error message is authored as managed, versioned templates in the languages used in the state — not machine-translated at runtime. Which languages, and in what order, is a departmental decision the platform simply carries out.</li>
+    <li><strong>One account, everything in it:</strong> all applications, certificates, invitations and payments in a single view. No per-department logins, no separate portals to remember.</li>
+    <li><strong>Forms ask only what the registries cannot answer.</strong> Everything the People Hub already knows arrives pre-filled for confirmation. Screens present one topic at a time, save and resume at any point, and work on an inexpensive Android phone over a weak network.</li>
+    <li><strong>Documents by phone camera,</strong> checked on the device — legibility, size, format — before submission is attempted, so the upload failure the citizen sees today is caught and explained before it can occur.</li>
+    <li><strong>No smartphone, same service:</strong> IVRS by voice and assisted mode at CSC/BSK counters, where the operator works the same forms on the same platform. Channel does not change entitlement or speed.</li>
+    <li><strong>Accessible by standard:</strong> GIGW and WCAG 2.1 AA conformance, screen-reader tested, large-type mode — verified per release, not asserted.</li>
+    <li><strong>Every action leaves the citizen holding something:</strong> an application number immediately, a receipt for each step, and status in plain language — "being verified at the Block office, expected by 14 June" — never a workflow code.</li>
+    <li><strong>No dead ends:</strong> every error states what went wrong and what to do next, and every failure path offers retry, save, or a route into the grievance service.</li>
+  </ul>
+
+  <h3>The official's experience</h3>
+  <ul>
+    <li><strong>One inbox, minimal clicks:</strong> the decision summary of Section 3 puts the complete case on one screen; the console is keyboard-navigable and built for a full day's use, not a demonstration.</li>
+    <li><strong>Nothing is retyped.</strong> Verified facts are displayed, never re-entered; an approval is a judgement and a signature, not data entry.</li>
+    <li><strong>Learn once, keep it through transfers:</strong> because every service runs on the same engine, screens are consistent across all of them. An officer moving between seats — as officers do — carries the interface with them.</li>
+    <li><strong>The field officer's tool is built for the field:</strong> an offline-capable task list with locations, case context and camera evidence capture, synchronising when the network returns.</li>
+  </ul>
+
+  <h3>Measured, not assumed</h3>
+  <ul>
+    <li><strong>A design system of tested components</strong> — since every service's screens render from the shared library, a new service inherits accessible, tested interface behaviour by construction, and an improvement to a component improves all 158 services at once.</li>
+    <li><strong>Usability rounds with real citizens</strong> — including first-time and low-literacy users, in their own language, at CSC counters as well as on phones — before each major release.</li>
+    <li><strong>Usability is on the dashboard:</strong> form completion rate, per-field drop-off, upload failure rate, median time to complete, and channel mix, per service — the complaints that dog the current system become owned, trending numbers with a named service owner.</li>
+  </ul>
+</section>
+
+<!-- ============ 7. INSIGHTS ============ -->
+<section id="s7">
+  <div class="sec-head"><span class="n">7</span><h2>Insight at every level</h2></div>
+
+  <p class="lede">
+    A platform that records every event can answer every level of the hierarchy from the same data. Today,
+    the picture the Minister sees is assembled by hand up the chain — each level compiling registers into
+    reports, with the delay and the softening that implies. Here, the numbers at every altitude are live
+    views over the same event stream, and every figure can be opened down to the underlying cases.
+  </p>
+
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Level</th><th>What they see</th><th>What it lets them do</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Minister / Chief Secretary</td>
+        <td>Statewide coverage of each scheme against the estimated eligible population; district comparisons; disbursement against sanction; trends since launch.</td>
+        <td>Judge whether policy is actually reaching people, and where to direct attention.</td>
+      </tr>
+      <tr>
+        <td>Departmental Secretary / HoD</td>
+        <td>Service performance across districts; pendency and SLA heatmaps; the projected impact of a criteria change before it is published (the dry-run of Section 4).</td>
+        <td>Tune schemes and processes on evidence rather than anecdote.</td>
+      </tr>
+      <tr>
+        <td>District Magistrate</td>
+        <td>Every service pipeline in the district; SLA breaches by office and by officer; workload distribution; grievance clusters.</td>
+        <td>Intervene where the data shows friction, not where the loudest file lands.</td>
+      </tr>
+      <tr>
+        <td>SDO / BDO</td>
+        <td>Block-level queues; field-verification backlog and its ageing; local exception patterns — which registry checks fail most often here, and why.</td>
+        <td>Run the week's work; plan camps where eligible citizens are dropping off.</td>
+      </tr>
+      <tr>
+        <td>Approving officer</td>
+        <td>Personal queue with SLA clocks; decision-ready rate for their services; own turnaround alongside the office average.</td>
+        <td>Clear cases with confidence; have workload represented fairly upward.</td>
+      </tr>
+      <tr>
+        <td>Field / verification officer</td>
+        <td>A mobile-first task list with locations, offline evidence capture, and the case context for each visit.</td>
+        <td>Complete verifications in one visit, from the site.</td>
+      </tr>
+      <tr>
+        <td>Citizen</td>
+        <td>Application status in plain language; Know Your Entitlement queries against the live rules.</td>
+        <td>Trust the process without travelling to an office to ask.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>Rules that keep the insight honest</h4>
+  <ul>
+    <li><strong>Same events, every level — no parallel MIS.</strong> These views replace the manually compiled reporting chain; publishing them retires the registers, which is where both the reporting burden and the inconsistencies live.</li>
+    <li><strong>Drill-down everywhere.</strong> Any aggregate opens into its constituent cases, subject to role-based access — so a review meeting argues about action, not about whose figure is correct.</li>
+    <li><strong>Alerts, not only dashboards.</strong> An SLA breach notifies the responsible officer first and escalates on a schedule; a district falling behind on a flagship scheme reaches the DM's morning summary without anyone having to ask for a report.</li>
+    <li><strong>Privacy holds at altitude.</strong> Higher levels see aggregates by default; case-level detail stays within an officer's jurisdiction and purpose, and every such access is logged like any other.</li>
+  </ul>
+</section>
+
+<!-- ============ 8. TECHNOLOGY ============ -->
+<section id="s8">
+  <div class="sec-head"><span class="n">8</span><h2>Technology choices &amp; trade-offs</h2></div>
+
+  <p class="lede">
+    Every recommendation below is made on merit, not on what is fashionable or what other Indian projects
+    happen to run. But "merit" for a system the state must operate for fifteen years includes qualities that
+    benchmarks don't measure: <strong>can a new team debug it at 2&nbsp;a.m.? Can the next SI take it over? Will
+    the talent to maintain it exist in Kolkata in 2035?</strong> Where those questions ruled out an otherwise
+    excellent technology, that reasoning is stated openly.
+  </p>
+
+  <div class="callout warn">
+    <span class="tag">The cost of choosing everything</span>
+    <p>
+      The gravest risk in this section is not picking the wrong item — it is picking <em>all</em> of them.
+      Blockchain <em>and</em> fifty microservices <em>and</em> a service mesh <em>and</em> every passing trend produces a
+      system no one can hold in their head, which is another name for a system no one can debug or secure.
+      Each addition below had to earn its operational weight; several well-known technologies were rejected
+      precisely because the platform is stronger without them.
+    </p>
+  </div>
+
+  <!-- Architecture style -->
+  <div class="decision">
+    <div class="d-head">
+      <span class="d-domain">System shape</span>
+      <span class="d-pick">Modular monolith with enforced boundaries, plus a few deliberate satellites</span>    </div>
+    <div class="d-body">
+      <div class="gain">
+        <h5>Why this wins</h5>
+        <ul>
+          <li>One deployable, one database transaction model, one stack trace — an approval that touches five modules is <em>one</em> debugging session, not five services and a network mystery.</li>
+          <li>Module boundaries (service registry, workflow, entitlement, hubs) are enforced at build time, so extraction into services later is a refactor, not a rewrite.</li>
+          <li>An operations team of realistic government size can actually run it. Fifty microservices assume a platform team we should not assume.</li>
+          <li>Satellites only where isolation genuinely pays: notification delivery, document/OCR processing, and the analytics store run separately because they have different load and failure profiles.</li>
+        </ul>
+      </div>
+      <div class="lose">
+        <h5>What we give up</h5>
+        <ul>
+          <li>Modules cannot scale independently — we scale the whole core (mitigated: the core is stateless and scales horizontally; the heavy asymmetric loads are exactly the satellites we extracted).</li>
+          <li>A single bad deployment affects all services at once (mitigated by blue-green deployment and per-module feature flags).</li>
+          <li>On paper this looks less ambitious than a microservices programme; operationally it is the stronger position for a team of realistic size.</li>
+        </ul>
+      </div>
+      <div class="d-alt">
+        <h5>Alternatives weighed</h5>
+        <p><b>Full microservices (the Odisha model):</b> right for Odisha's context of many independent vendor teams; wrong for a platform whose core value is <em>shared</em> workflow and <em>shared</em> data. We would pay the distributed-systems tax — network failures, partial outages, distributed tracing as a way of life — before we have the team to afford it.</p>
+        <p><b>Buy a proprietary low-code platform:</b> fastest to first demo, and the road back to the dependency this architecture is designed to avoid.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Language -->
+  <div class="decision">
+    <div class="d-head">
+      <span class="d-domain">Core language &amp; runtime</span>
+      <span class="d-pick">Kotlin on the JVM (Java 21 LTS), Spring Boot</span>    </div>
+    <div class="d-body">
+      <div class="gain">
+        <h5>Why this wins</h5>
+        <ul>
+          <li>The JVM has the deepest production diagnostics of any runtime: flight recorder, heap dumps, thread dumps, async profilers — on a live system, without stopping it. For a platform whose core promise is debuggability, this is decisive.</li>
+          <li>Kotlin gives modern, null-safe, concise code on that runtime — expressive enough to model the domain cleanly, boring enough that any strong Java engineer reads it in a day.</li>
+          <li>The best workflow (Flowable), rules (DMN engines), and Kafka ecosystems are JVM-native — the centre of this architecture runs <em>in-process</em>, not over the network.</li>
+          <li>Thirty years of JVM maturity in exactly this class of system: high-stakes, long-lived, transactional.</li>
+        </ul>
+      </div>
+      <div class="lose">
+        <h5>What we give up</h5>
+        <ul>
+          <li>More memory per instance and slower cold starts than Go or Node (irrelevant for long-running services; costs a little more RAM in the data centre).</li>
+          <li>No shared language between backend and frontend (accepted: the contract between them is JSON Schema, which is language-neutral by design).</li>
+          <li>Build times longer than scripting languages; developers need JVM literacy.</li>
+        </ul>
+      </div>
+      <div class="d-alt">
+        <h5>The field, compared honestly</h5>
+        <p>
+          The core runtime was the most contested choice in this document, so the serious candidates are set
+          out against the criteria that matter for this system: live-production diagnostics, the
+          workflow-and-rules ecosystem, fifteen-year maintainability under rotating teams, and the realistic
+          pool of engineers available to successive SIs in India. There are several good languages here;
+          the question is which one has the fewest compromises against these specific criteria.
+        </p>
+        <div class="tablewrap">
+        <table>
+          <thead><tr><th>Candidate</th><th>Where it is genuinely strong</th><th>Why it is not the core runtime here</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>C# / .NET 8</td>
+              <td>The closest peer: comparable diagnostics, strong typing, mature tooling, a good hiring pool.</td>
+              <td>Decided on ecosystem, not quality: the mature open-source BPMN/DMN engines are JVM-native. On .NET, the workflow core — the heart of this platform — would run out-of-process or on weaker ports, putting a network boundary through the middle of the system.</td>
+            </tr>
+            <tr>
+              <td>Java 21 alone</td>
+              <td>Entirely acceptable; the largest maintenance pool of all.</td>
+              <td>Not rejected at all — Kotlin is a thin improvement (null-safety, conciseness) on the same runtime, with complete two-way interoperability. A team that knows Java maintains Kotlin within weeks. If the department prefers plain Java for staffing reasons, nothing else in this document changes.</td>
+            </tr>
+            <tr>
+              <td>TypeScript / Node</td>
+              <td>One language across frontend and backend is real leverage; fast development.</td>
+              <td>Runtime diagnostics under sustained load are far weaker, and the workflow/rules ecosystem is absent exactly where this system lives. TypeScript keeps its natural role: the entire frontend.</td>
+            </tr>
+            <tr>
+              <td>Go</td>
+              <td>Excellent operational profile: small, fast, simple deployments.</td>
+              <td>Too spare for a rich transactional domain core, and no BPMN/DMN ecosystem. It is a strong candidate for the satellites — the notification bus adapters in particular.</td>
+            </tr>
+            <tr>
+              <td>Python</td>
+              <td>The right tool for the analytics and data-science jobs at the platform's edge.</td>
+              <td>Runtime typing and refactoring safety at scale argue against a high-integrity transactional core maintained by rotating teams.</td>
+            </tr>
+            <tr>
+              <td>Scala</td>
+              <td>Genuinely powerful; its type system would model eligibility rules elegantly.</td>
+              <td>Rejected on a merit criterion, not fashion: codebases tend to diverge in style until only their original authors navigate them confidently, and this platform must survive several changes of team. Kotlin retains most of the expressiveness without that failure mode.</td>
+            </tr>
+            <tr>
+              <td>Elixir / Erlang</td>
+              <td>An exceptional reliability model, proven in telecoms.</td>
+              <td>Ecosystem depth for BPMN/DMN, eSign and HSM integration, and the sustained hiring pool for government maintenance, are the gaps.</td>
+            </tr>
+            <tr>
+              <td>Rust</td>
+              <td>The strongest correctness guarantees available.</td>
+              <td>Development pace and hiring cost outweigh the benefit for a system whose bottleneck is IO and integration, not computation.</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <p>
+          Kotlin on the JVM is not the only good answer; it is the one that scores well on every criterion at
+          once, and whose failure modes are the best understood in the industry. Nothing here is dogma: the
+          satellites are free to use the better tool for their narrower jobs.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workflow -->
+  <div class="decision">
+    <div class="d-head">
+      <span class="d-domain">Workflow &amp; rules</span>
+      <span class="d-pick">Flowable (open-source BPMN + DMN), embedded in the core</span>    </div>
+    <div class="d-body">
+      <div class="gain">
+        <h5>Why this wins</h5>
+        <ul>
+          <li>BPMN diagrams <em>are</em> the executable workflow — the same picture a Joint Secretary approves is what the engine runs. No translation gap between sanctioned process and implemented process.</li>
+          <li>DMN decision tables make scheme criteria readable, versionable and testable by the officers who own the scheme — the keystone of the entitlement engine.</li>
+          <li>Open source under Apache license, embedded in our JVM process: no per-seat fees, no network hop to a workflow server, full access to fix or extend.</li>
+          <li>Both are ISO/OMG open standards — flow definitions outlive any vendor, including this one.</li>
+        </ul>
+      </div>
+      <div class="lose">
+        <h5>What we give up</h5>
+        <ul>
+          <li>Highly dynamic, code-heavy orchestration logic is clumsier in BPMN than in code (mitigated: complex decisions belong in DMN or service tasks, keeping diagrams simple).</li>
+          <li>Flowable's tooling is less polished than commercial Camunda's — we budget for building a curated modelling UI for departmental analysts.</li>
+        </ul>
+      </div>
+      <div class="d-alt">
+        <h5>Alternatives weighed</h5>
+        <p><b>Temporal:</b> the best durable-execution engine in the industry, with superb replay debugging — but workflows become <em>code</em>, meaning every new service needs developers, which quietly recreates the dependency on a vendor that this whole architecture exists to break. Wrong tool for a configurability-first platform.</p>
+        <p><b>Camunda 8:</b> excellent, but its licensing has moved away from open source; a per-instance cost on a platform meant to run every service in the state is a lock-in seed.</p>
+        <p><b>Build our own engine:</b> the classic e-governance mistake. Workflow engines are deceptively deep; we would spend years rediscovering solved problems.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data -->
+  <div class="decision">
+    <div class="d-head">
+      <span class="d-domain">Data layer</span>
+      <span class="d-pick">PostgreSQL as the single system of record; event log with outbox; OpenSearch &amp; Redis as satellites</span>    </div>
+    <div class="d-body">
+      <div class="gain">
+        <h5>Why this wins</h5>
+        <ul>
+          <li>PostgreSQL handles both shapes this system needs: strict relational integrity for registries and payments, and JSONB documents for form payloads whose schemas vary per service — without running two database products.</li>
+          <li>Application state changes are written as an append-only event log in the same transactional store (outbox pattern), then published to the backbone — <strong>audit trail and integration feed from one write</strong>, with no dual-write inconsistency.</li>
+          <li>Battle-tested backup, replication and point-in-time recovery — the DR strategy (Section 9) stands on this.</li>
+          <li>OpenSearch serves citizen-facing search and dashboards; Redis handles sessions and hot lookups. Both are disposable projections — losing them loses no truth.</li>
+        </ul>
+      </div>
+      <div class="lose">
+        <h5>What we give up</h5>
+        <ul>
+          <li>A single logical database is a scaling ceiling far in the future (at WB volumes — crores of rows, not billions per day — PostgreSQL with partitioning and read replicas has enormous headroom; the event log gives us a clean migration path if that day comes).</li>
+          <li>JSONB queries need discipline (mitigated: JSON Schema validation at the boundary, generated indexes per service).</li>
+        </ul>
+      </div>
+      <div class="d-alt">
+        <h5>Alternatives weighed</h5>
+        <p><b>Apache Kafka as the backbone from day one:</b> the natural end-state, but a Kafka cluster is a serious operational commitment (brokers, partitions, rebalancing, retention tuning). We start with the Postgres-based outbox and a lightweight broker, and adopt Kafka when event volume — not architecture fashion — demands it. The event contracts don't change; only the pipe does.</p>
+        <p><b>MongoDB for form data:</b> solves a problem JSONB already solves, at the price of a second database product, a second backup regime, and weaker transactional guarantees across the registry boundary.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Frontend -->
+  <div class="decision">
+    <div class="d-head">
+      <span class="d-domain">Frontend</span>
+      <span class="d-pick">Next.js for the citizen portal; React (Vite) for the department console; both schema-driven</span>
+    </div>
+    <div class="d-body">
+      <div class="gain">
+        <h5>Why this split</h5>
+        <ul>
+          <li>Both are React with TypeScript — one component library, one form renderer driven by JSON Schema, one accessibility and localisation effort, shared by every service. A new service needs no frontend work at all.</li>
+          <li>The citizen portal uses Next.js server-side rendering because of who it serves: on a low-end Android phone over a weak network, a server-rendered page shows content before the application code has finished downloading, and public scheme pages are indexable by search engines — often the first door a citizen finds. It is self-hosted in the data centre; no external cloud service is involved.</li>
+          <li>The department console is a plain React single-page application: it sits behind login, runs all day on desktops, and gains nothing from server rendering. The simpler build is the one that is easier to maintain for fifteen years.</li>
+          <li>Both ship as Progressive Web Apps — installable, tolerant of dropped connections, no app-store gatekeeping. The field officer's verification tool is the same console in mobile form, with offline evidence capture.</li>
+        </ul>
+      </div>
+      <div class="lose">
+        <h5>What we give up</h5>
+        <ul>
+          <li>Next.js adds a Node runtime to operate alongside the JVM. It is confined to rendering pages; all logic stays behind the API gateway, so its blast radius is presentation only.</li>
+          <li>Next.js evolves quickly — we pin long-term-support versions and use its stable core, not its experimental features.</li>
+          <li>Schema-driven rendering constrains exotic per-service UI. This is deliberate: uniformity is what makes 158 services learnable for citizens and CSC operators alike.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification bus -->
+  <div class="decision">
+    <div class="d-head">
+      <span class="d-domain">Citizen notification</span>
+      <span class="d-pick">A pluggable notification bus — channels are adapters, not architecture</span>
+    </div>
+    <div class="d-body">
+      <div class="gain">
+        <h5>Why this shape</h5>
+        <ul>
+          <li>WhatsApp appears in the original architecture as the example channel; it is only that — an example. The platform publishes one thing (a notification event with its template and language), and a bus of channel adapters delivers it: WhatsApp, Telegram, SMS, email, IVRS voice, mobile push and the portal inbox at launch. Anything with an API — RCS, a future state app — is a new adapter later, written without touching the core.</li>
+          <li>Each citizen records a channel preference and gets a fallback chain (for example WhatsApp → SMS → portal inbox). Delivery receipts flow back as events, so "was this citizen actually reached?" is a queryable fact, and an invitation that fails on one channel automatically tries the next.</li>
+          <li>Templates are managed centrally, versioned and localised into the languages used in the state. Departments compose notifications; they never integrate with a channel API — the single biggest saving of the Telangana centralised-gateway model, generalised beyond one channel.</li>
+          <li>The bus runs as a satellite service, so a channel outage or a bulk campaign never loads the core platform.</li>
+        </ul>
+      </div>
+      <div class="lose">
+        <h5>What we give up</h5>
+        <ul>
+          <li>Commercial channels (WhatsApp, Telegram) carry per-message costs and policy terms the state does not control — which is exactly why no channel is load-bearing. SMS, IVRS and the portal remain fully sovereign paths that work if every commercial channel is switched off.</li>
+          <li>Multi-channel delivery needs careful de-duplication so a citizen is informed once, not four times. The bus solves this once, centrally, rather than each department solving it separately.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Identity & infra -->
+  <div class="decision">
+    <div class="d-head">
+      <span class="d-domain">Identity, infrastructure &amp; observability</span>
+      <span class="d-pick">Keycloak; Kubernetes on State Data Centre + MeghRaj DR; OpenTelemetry stack</span>    </div>
+    <div class="d-body">
+      <div class="gain">
+        <h5>Why this wins</h5>
+        <ul>
+          <li><strong>Keycloak</strong> (open source) for official identity: role hierarchies that mirror the administrative hierarchy, mandatory MFA for approvers, full login audit. Citizens authenticate via Aadhaar OTP/e-KYC with mobile-OTP fallback.</li>
+          <li><strong>Kubernetes</strong> gives zero-downtime blue-green deployments and self-healing — but a deliberately small cluster running a handful of deployables, not a sprawl of services.</li>
+          <li>Primary in the State Data Centre, <strong>warm DR on NIC/MeghRaj cloud</strong> with continuous replication — directly closing e-District 2.0's most dangerous gap.</li>
+          <li><strong>OpenTelemetry + Grafana/Prometheus/Loki/Tempo:</strong> one correlation ID follows a citizen's request from the WhatsApp message through workflow, rules and payment. "Why is this application stuck?" becomes a query, not an investigation.</li>
+          <li>Infrastructure as code (Terraform + Ansible) — the environment itself is versioned, reviewable and rebuildable, which is what makes the DR site real rather than aspirational.</li>
+        </ul>
+      </div>
+      <div class="lose">
+        <h5>What we give up</h5>
+        <ul>
+          <li>Kubernetes demands genuine ops skill — we hire/train for it explicitly rather than pretending otherwise; the small blast radius of a modular monolith keeps the demand honest.</li>
+          <li>Self-hosted observability needs care and storage; the alternative (commercial SaaS APM) sends citizen-adjacent telemetry to third parties — unacceptable here.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>On blockchain — addressed on its merits</h3>
+  <div class="callout">
+    <span class="tag">Position</span>
+    <p>
+      <strong>Blockchain is not part of this proposal.</strong> The goals it was invoked for — tamper-evident
+      records, instant verification, a single source of truth — are delivered instead by digitally signed
+      credentials and an append-only audit ledger, as set out below. This is stated plainly because the
+      question will be asked.
+    </p>
+  </div>
+  <p>
+    The original architecture proposed Hyperledger for certificate-less governance. The <em>goal</em> is exactly
+    right and this architecture delivers it: tamper-evident, instantly verifiable records and a single source
+    of truth. But a permissioned blockchain is the wrong instrument for it here, for three technical reasons:
+  </p>
+  <ul>
+    <li><strong>Blockchain's core value is removing the need for a trusted operator — and the State of West Bengal <em>is</em> the trusted operator.</strong> Every certificate it issues is authoritative because the state signs it, not because a consensus protocol agrees. We would pay blockchain's full operational and debugging complexity to obtain a guarantee we already have by definition.</li>
+    <li><strong>Immutability collides with data protection law.</strong> Citizen personal data on an immutable ledger cannot honour DPDP correction and erasure rights. Ledger projects that discover this late end up storing only hashes on-chain — at which point the chain is ceremony around what a signed append-only log already does.</li>
+    <li><strong>What actually delivers "certificate-less" verification</strong> is digitally signed credentials (eSign/HSM-backed, following the W3C Verifiable Credentials model), QR-verifiable offline by anyone, anchored in the append-only audit ledger, and distributed via DigiLocker. Any bank, university or employer verifies a West Bengal certificate in one scan — no photocopies, no attestation queues, and no blockchain node for anyone to operate.</li>
+  </ul>
+  <p>
+    Should a genuinely multi-party trust need emerge later — say, inter-state credential exchange without a
+    central authority — periodic hash-anchoring of the audit ledger can be added in weeks. The state gives up
+    a fashionable term and keeps a system its engineers can fully reason about.
+    The <strong>metaverse concepts</strong> in the original architecture (entitlement stores, tourism promotion) are
+    likewise noted as channel experiments to revisit once the platform is live — nothing in this architecture
+    precludes them, and nothing in it should wait for them.
+  </p>
+</section>
+
+<!-- ============ 9. SECURITY ============ -->
+<section id="s9">
+  <div class="sec-head"><span class="n">9</span><h2>Security, reliability, debuggability</h2></div>
+
+  <p class="lede">
+    These three qualities are the acceptance criteria of the whole programme, so they are designed in as
+    architecture, not bolted on as a checklist. This section states the commitments the platform will be held to.
+  </p>
+
+  <h3>Security &amp; privacy</h3>
+  <ul>
+    <li><strong>DPDP Act 2023 by construction:</strong> every attribute in the People Hub carries a purpose binding; every access is checked against it and recorded in the consent ledger. Consent is collected at the invitation moment, is per-purpose, and is revocable — with revocation itself an audited event.</li>
+    <li><strong>Aadhaar handled to the letter of the Aadhaar Act:</strong> Aadhaar numbers vaulted and tokenised; only reference tokens circulate through the platform. e-KYC through licensed AUA/KUA channels only.</li>
+    <li><strong>Zero-trust posture inside the perimeter:</strong> services authenticate to each other; officials get least-privilege roles mapped to the administrative hierarchy; approver actions require MFA; no shared accounts, ever.</li>
+    <li><strong>Data protection at rest and in transit:</strong> TLS 1.3 everywhere, AES-256 encrypted storage, HSM-held signing keys for certificates, field-level encryption for the most sensitive attributes (health, caste).</li>
+    <li><strong>Input hygiene at every boundary:</strong> JSON Schema validation on every submission, file-type and malware scanning on every upload, OWASP ASVS Level 2 as the development baseline with CERT-In-empanelled audits before each major release and annual red-team exercises thereafter.</li>
+  </ul>
+
+  <h3>Reliability &amp; service levels</h3>
+  <p>
+    A single availability figure for the whole platform hides more than it reveals. Targets are therefore
+    tiered by what each path costs to keep up and what its failure costs a citizen:
+  </p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Path</th><th>Availability target</th><th>How it is met</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Certificate verification &amp; status checks</td>
+        <td>99.99%</td>
+        <td>Read-only paths served from replicated stores at both sites simultaneously; QR verification of an issued certificate keeps working even during a core outage.</td>
+      </tr>
+      <tr>
+        <td>Application submission &amp; payments</td>
+        <td>99.95%</td>
+        <td>Transactional core with automatic failover; CSC/BSK counters queue submissions locally through brief interruptions and reconcile on recovery.</td>
+      </tr>
+      <tr>
+        <td>Department console &amp; dashboards</td>
+        <td>99.9%</td>
+        <td>Standard high availability; a short console interruption delays internal work but does not deny a citizen a service.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    A flat 99.99% across every component — 52 minutes of permissible downtime a year, everywhere — would
+    require active-active operation of the transactional core across two sites, roughly doubling
+    infrastructure and operations cost to protect paths that tolerate brief interruption. The tiering above
+    places the four-nines guarantee where citizens actually feel it, and states the cost reasoning openly,
+    so the decision is taken knowingly rather than discovered later. Recovery commitments: RPO ≤ 15 minutes and RTO ≤ 4 hours via
+    the warm DR site on NIC/MeghRaj, commissioned in Phase 1; quarterly failover drills prove these numbers
+    rather than asserting them.
+  </p>
+  <ul>
+    <li><strong>Graceful degradation as a design rule:</strong> if Aadhaar e-KYC is down, applications queue for later verification rather than failing; if a notification channel fails, delivery falls through the citizen's fallback chain; if the analytics store is down, service delivery does not notice.</li>
+    <li><strong>Blue-green deployments with automated rollback</strong> — a bad release is a five-minute revert, not an outage.</li>
+    <li><strong>Consistency is engineered, not assumed:</strong> the core is fully transactional — an application, its fee payment and its audit event commit together or not at all. Search indexes and dashboards are downstream projections whose replication lag is itself measured and alarmed. Every DBT disbursement is reconciled daily against IFMS/PFMS records, with any discrepancy raised automatically as a workflow case for resolution, not left to a month-end spreadsheet.</li>
+  </ul>
+
+  <h4>Monitoring the promise</h4>
+  <ul>
+    <li><strong>Synthetic probes</strong> exercise the critical citizen journeys — load the portal, submit a test application, verify a certificate — every minute, from inside and outside the data centre, so an outage is detected by the platform team before the first citizen call.</li>
+    <li><strong>Error budgets per tier,</strong> reviewed weekly: when a service has burned its budget, stability work takes precedence over new features by standing rule, not negotiation.</li>
+    <li><strong>Alerting follows the administrative hierarchy:</strong> a failing probe pages the on-call engineer; a breached target notifies the platform lead; a sustained citizen-facing outage reaches the department&#8217;s designated officer with a public status page already live.</li>
+    <li><strong>A monthly service report</strong> — availability per tier, SLA adherence per service, reconciliation results, drill outcomes — is generated from the same telemetry and shared with the department's leadership; it is never compiled by hand.</li>
+  </ul>
+
+  <h3>Debuggability — the quality that keeps the other two honest</h3>
+  <ul>
+    <li><strong>One correlation ID per citizen interaction</strong>, propagated from channel to payment. Support staff paste an application number and see its complete story: every state transition, every rule fired, every integration call, every human action, with timestamps.</li>
+    <li><strong>The event log is the system's memory.</strong> Because every state change is an immutable event, any past state can be reconstructed and any incident replayed. "What did the system believe on 14 March, and why did it decide what it decided?" has an exact answer — this is what event sourcing buys, and why it is in the core rather than the wishlist.</li>
+    <li><strong>Explainable automation:</strong> every automated verdict stores its rule version and inputs (Section 4) — the difference between "the computer rejected it" and an accountable decision.</li>
+    <li><strong>Structured, centralised logs with privacy filters</strong> — debuggable does not mean personal data strewn through log files; PII is masked at the logging layer itself.</li>
+  </ul>
+
+  <h3>Maintainable inside the data centre</h3>
+  <p>
+    The State Data Centre and its DR site operate isolated from the public internet, and the platform is
+    designed to be operated entirely from within that boundary. Releases enter as signed, versioned artefacts
+    that have passed code review, the full automated test suite, security scanning and staging sign-off;
+    nothing else crosses in, and live citizen data never crosses out.
+  </p>
+  <ul>
+    <li><strong>A mirrored artefact and dependency repository</strong> inside the data centre — every library, base image and tool version the platform uses — so any component can be rebuilt with no external connection and no vendor on the phone.</li>
+    <li><strong>Documentation ships with every release:</strong> architecture decision records, operational runbooks, generated API references, and the BPMN and DMN definitions — which remain readable diagrams and decision tables by design.</li>
+    <li><strong>Environments are code:</strong> infrastructure definitions live in the repository, and an internal staging environment mirrors production, so every release is verified inside the boundary before it reaches citizens, and any environment can be rebuilt from the repository alone.</li>
+    <li><strong>Maintenance drills</strong> run periodically using only what exists inside the boundary: diagnose a seeded fault from traces, roll back a release, rebuild an environment. A capability counts as real only once it has been rehearsed.</li>
+  </ul>
+</section>
+
+<!-- ============ 10. OWNERSHIP ============ -->
+<section id="s10">
+  <div class="sec-head"><span class="n">10</span><h2>Ownership and continuity</h2></div>
+
+  <p class="lede">
+    Who owns the system, and who can change it, are decided by architecture and contract together. Both are
+    designed here so that control rests with the state.
+  </p>
+  <ul>
+    <li><strong>The state owns everything.</strong> Source code, schemas, BPMN/DMN definitions, infrastructure code and documentation are state IP, in a state-controlled repository, from the first commit. This is an RFP clause, non-negotiable.</li>
+    <li><strong>Open standards are the exit door.</strong> Because services are JSON Schema + BPMN + DMN — all vendor-neutral standards — a future SI, or the state's own team, picks up every definition without translation. The stack itself (PostgreSQL, Flowable, Keycloak, Kubernetes) is open source end to end: no per-seat, per-service or per-instance fees anywhere in the core.</li>
+    <li><strong>Configuration authority stays with departments.</strong> Form and workflow changes — the bulk of change requests today — become something trained departmental analysts do themselves. The vendor's scope is the platform, not the services.</li>
+    <li><strong>Time &amp; Material engagement with an on-site team,</strong> as recommended in the original architecture: manpower selected by the department, working from department premises, with contractual continuity commitments and paid handover periods. Scope evolves without change-request friction.</li>
+    <li><strong>Exit is rehearsed, not hoped for.</strong> The RFP defines a handover runbook — environment rebuild from IaC, data export verification, a parallel-run period — and the department exercises parts of it annually.</li>
+  </ul>
+</section>
+
+<!-- ============ 11. ROADMAP ============ -->
+<section id="s11">
+  <div class="sec-head"><span class="n">11</span><h2>Phased roadmap</h2></div>
+
+  <p>
+    Each phase ends with something live for citizens, not a milestone document. Phases are ordered by
+    dependency and gated by their exit tests, not by dates — durations belong in the project plan the
+    selected SI commits to, not in the architecture. The proactive capability is piloted early and
+    deliberately small, because its trust model must be proven before it is scaled.
+  </p>
+
+  <div class="phase">
+    <div class="p-tag">Phase 0</div>
+    <div>
+      <h4>Foundations &amp; proof of architecture</h4>
+      <p>Core platform skeleton: workflow engine, service registry, schema-driven form rendering, observability stack, CI/CD, IaC. Two real services rebuilt end-to-end (one certificate, one licence) as the working proof.</p>
+      <ul><li>Exit test: a departmental analyst — not a developer — configures a third service and it goes live.</li></ul>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="p-tag">Phase 1</div>
+    <div>
+      <h4>Migration at scale + the hubs</h4>
+      <p>Top 40 services by volume migrated; department console replaces per-service screens; Certificate Hub live with DigiLocker sync and historic digitisation begun; People Hub seeded from priority databases with identity-resolution review workflow; <strong>DR site commissioned and drilled</strong>.</p>
+      <ul><li>Exit test: DR failover drill passes published RTO/RPO; QR verification works for every new certificate.</li></ul>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="p-tag">Phase 2</div>
+    <div>
+      <h4>Proactive pilot — two schemes, one district cluster</h4>
+      <p>Entitlement engine live for Kanyashree and one entrepreneur-facing scheme in a pilot district cluster. Notification bus live with at least two channels for invitations and status tracking. Every invitation, consent and outcome measured against the reactive baseline.</p>
+      <ul><li>Exit test: measurable uplift in eligible-citizen coverage, zero substantiated wrong-invitation incidents, consent flows validated with real citizens.</li></ul>
+    </div>
+  </div>
+  <div class="phase">
+    <div class="p-tag">Phase 3</div>
+    <div>
+      <h4>Statewide proactive governance</h4>
+      <p>Remaining services migrated; e-District 2.0 decommissioned (retiring its O&amp;M cost); proactive matching extended scheme by scheme statewide; Know Your Entitlement opened as a citizen-facing query on the same rules; analytics dashboards for district and state administration.</p>
+      <ul><li>Steady state: new schemes launch as configuration, with a pre-launch dry-run showing exactly whom they will reach.</li></ul>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+</div>
+
+</body>
+</html>
